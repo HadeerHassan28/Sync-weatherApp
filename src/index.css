@@ -1,0 +1,60 @@
+/* You can add global styles to this file, and also import other style files */
+@import url("https://fonts.googleapis.com/css2?family=Encode+Sans+Expanded:wght@300&display=swap");
+:root {
+  --main-color: #000000;
+  --light-color: #f0f3f2;
+  --shadow: rgba(145, 158, 171, 0.2) 0px 2px 4px -1px,
+    rgba(145, 158, 171, 0.14) 0px 4px 5px 0px,
+    rgba(145, 158, 171, 0.12) 0px 1px 10px 0px;
+  --font-family: "Encode Sans Expanded", sans-serif;
+  --rating-color: #ffc908;
+  --background: url("../src/assets/images/forecast.png");
+}
+:root {
+  filter: brightness(0.7);
+}
+
+body {
+  font-family: var(--font-family) !important;
+  background: var(--background);
+  background-size: cover;
+  background-repeat: no-repeat;
+  /* background-position: center; */
+  position: relative;
+}
+.brightness-filter {
+  filter: brightness(1) !important;
+}
+.bg-weather {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.bg-main {
+  background: var(--main-color);
+  color: var(--light-color);
+}
+.text {
+  color: var(--light-color);
+}
+
+.btn {
+  border: 1px solid var(--main-color);
+  background: var(--light-color);
+}
+.btn:hover {
+  transform: scale(0.96) !important ;
+  background-color: var(--rating-color);
+}
