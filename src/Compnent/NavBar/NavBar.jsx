@@ -14,7 +14,7 @@ const NavBar = () => {
             className="d-inline-block align-text-top m-3"
           />
           <span className="text-main fa-lg">
-            <strong>Weather</strong>
+            <strong>WeatherApp</strong>
           </span>
         </div>
       </nav>
