@@ -1,15 +1,29 @@
 import React, { useEffect, useState } from "react";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import styles from "./Home.module.css";
 import Humidity from "../../assets/images/humidity.png";
 import sunrise from "../../assets/images/sunrise.png";
 import sunset from "../../assets/images/sunset.png";
 const Home = () => {
   const API_KEY = "a6b35769404f7161fd0258995d43abd8";
-  const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
   const [weatherData, setweatherData] = useState(null);
-  const fetshData = () => {
+  const formik = useFormik({
+    initialValues: {
+      city: "",
+      country: "",
+    },
+    validationSchema: Yup.object({
+      city: Yup.string().required("City is requied"),
+      country: Yup.string().required("Country is requied"),
+    }),
+    onSubmit: (values) => {
+      fetshData(values.city, values.country);
+    },
+  });
+  const fetshData = (city, country) => {
     setIsLoading(true);
     fetch(
       `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}`
@@ -42,34 +56,50 @@ const Home = () => {
       <div className="container mt-1">
         <div className="row justify-content-center align-items-center bg-weather p-2">
           <div className="col-md-6">
-            <label htmlFor="city" className="form-label">
-              <strong>City:</strong>
-            </label>
-            <input
-              type="text"
-              value={city}
-              onChange={(e) => setCity(e.target.value)}
-              className="form-control mb-3"
-              placeholder="Please Enter a City Name"
-            />
-
-            <label htmlFor="country" className="form-label">
-              <strong>Country:</strong>
-            </label>
-            <input
-              type="text"
-              value={country}
-              onChange={(e) => setCountry(e.target.value)}
-              className="form-control mb-3"
-              placeholder="Please Enter a Country Name"
-            />
-
-            <button
-              className="btn btn-primary bg-main w-100"
-              onClick={fetshData}
-            >
-              <i className="fa-solid fa-magnifying-glass fa-lg m-2 "></i> Search
-            </button>
+            <form onSubmit={formik.handleSubmit}>
+              {" "}
+              <label htmlFor="city" className="form-label">
+                <strong>City:</strong>
+              </label>
+              <input
+                type="text"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                className="form-control mb-3"
+                placeholder="Please Enter a City Name"
+                name="city"
+                id="city"
+              />
+              {formik.touched.city && formik.errors.city && (
+                <div className="alert alert-danger">{formik.errors.city}</div>
+              )}
+              <div className="mb-3">
+                <label htmlFor="country" className="form-label">
+                  <strong>Country:</strong>
+                </label>
+                <input
+                  type="text"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  className="form-control mb-3"
+                  placeholder="Please Enter a Country Name"
+                  name="country"
+                  id="country"
+                />
+                {formik.touched.country && formik.errors.country && (
+                  <div className="alert alert-danger">
+                    {formik.errors.country}
+                  </div>
+                )}
+              </div>
+              <button className="btn btn-primary bg-main w-100" type="submit">
+                <i
+                  className="fa-solid fa-magnifying-glass fa-lg m-2 "
+                  disabled={!formik.isValid || formik.isSubmitting}
+                ></i>{" "}
+                Search
+              </button>
+            </form>
 
             {weatherData && !isLoading ? (
               <div className="card mt-4 p-5 border">
