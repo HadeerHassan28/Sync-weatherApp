@@ -5,54 +5,92 @@ const Home = () => {
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [weathrData, setweatherData] = useState(null);
+  const [weatherData, setweatherData] = useState(null);
 
   const fetshData = () => {
     setIsLoading(true);
     fetch(
-      `http://api.openweathermap.org/data/3.0/onecall?lat=33.44&lon=-94.04&appid={API_ key}`
+      `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}`
     )
       .then((response) => {
-        setweatherData(response.data);
-        //console.log(response);
+        if (!response.ok) throw new Error("Network Erorr");
+        return response.json();
       })
-      .catch((error) => error);
+      .then((data) => {
+        console.log(data);
+        setweatherData(data);
+        setIsLoading(false);
+        console.log(weatherData.name);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setIsLoading(false);
+      });
   };
 
   useEffect(() => {
     fetshData();
   }, []);
+
+  // if (isLoading) {
+  //   return (
+  //     <>
+  //       <div className="d-flex justify-content-center align-items-center">
+  //         <i className="fas fa-spinner fa-spin fa-3x text-main" />
+  //       </div>
+  //     </>
+  //   );
+  // }
   return (
     <>
-      <div className="my-5 d-flex align-items-start bg-weather p-3 ">
-        <label htmlFor="city" name="city" id="city" className="me-2 ">
-          <strong className="text fa-lg"> City:</strong>
-        </label>
+      <div className="container mt-1">
+        <div className="row justify-content-center align-items-center bg-weather p-2">
+          <div className="col-md-6">
+            <label htmlFor="city" className="form-label">
+              <strong>City:</strong>
+            </label>
+            <input
+              type="text"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+              className="form-control mb-3"
+            />
 
-        <input
-          type="text"
-          value={city}
-          onChange={(e) => {
-            setCity(e.target.value);
-          }}
-          className="form-control me-2"
-        />
+            <label htmlFor="country" className="form-label">
+              <strong>Country:</strong>
+            </label>
+            <input
+              type="text"
+              value={country}
+              onChange={(e) => setCountry(e.target.value)}
+              className="form-control mb-3"
+            />
 
-        <label htmlFor="country" name="country" id="country" className="me-2">
-          <strong className="text fa-lg"> Country:</strong>
-        </label>
+            <button className="btn btn-primary bg-main" onClick={fetshData}>
+              <i className="fa-solid fa-magnifying-glass fa-lg m-2 "></i> Search
+            </button>
 
-        <input
-          type="text"
-          value={country}
-          onChange={(e) => {
-            setCountry(e.target.contry);
-          }}
-          className="form-control me-2"
-        />
-        <button className="btn btn-hover">
-          <i className="fa-solid fa-magnifying-glass fa-lg m-2"></i>
-        </button>
+            {weatherData && !isLoading ? (
+              <div className="card mt-4">
+                <h2 className="card-title">
+                  Weather in {weatherData.name}, {weatherData.sys.country}
+                </h2>
+                <p className="card-text">
+                  Temperature: {weatherData.main.temp}°C
+                </p>
+                <p className="card-text">
+                  Weather: {weatherData.weather[0].description}
+                </p>
+              </div>
+            ) : (
+              <div className="mt-4">
+                <span className="h3">
+                  <strong>Please Select a City...</strong>
+                </span>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </>
   );

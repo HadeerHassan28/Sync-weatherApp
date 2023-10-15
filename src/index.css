@@ -49,10 +49,13 @@ body {
 .text {
   color: var(--light-color);
 }
-
+.title {
+  color: var(--main-color);
+}
 .btn {
   border: 1px solid var(--main-color);
   background: var(--light-color);
+  color: var(--main-color);
 }
 .btn:hover {
   transform: scale(0.96) !important ;
